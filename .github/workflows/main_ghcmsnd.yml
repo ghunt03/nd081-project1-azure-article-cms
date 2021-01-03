@@ -31,4 +31,4 @@ jobs:
       with:
         app-name: 'ghcmsnd'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_341aa5b68d374729b56c278a1659e15c }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_695ee2856b204306a00693dd2fdcb0a7 }}
