@@ -70,7 +70,7 @@ def login():
             app.logger.error('Invalid Login Attempt (username / password)')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        app.logger.info('Successful login occurred')
+        app.logger.info(user.username + ' has successfully logged in')
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
@@ -96,8 +96,14 @@ def authorized():
             return render_template("auth_error.html", result=result)
         session["user"] = result.get("id_token_claims")
         # Note: In a real app, we'd use the 'name' property from session["user"] below
-        # Here, we'll use the admin username for anyone who is authenticated by MS
-        user = User.query.filter_by(username="admin").first()
+        # Here, we'll use the admin username for anyone who is authenticated by MS 
+        loggedInUserName = session["user"]["name"]
+        user = User.query.filter_by(username=loggedInUserName).first()
+        if user is None:
+            newUser = User()
+            newUser.register_user(loggedInUserName)
+            user = User.query.filter_by(username=loggedInUserName).first()
+        app.logger.info(loggedInUserName + " has logged in")
         login_user(user)
         _save_cache(cache)
     return redirect(url_for('home'))

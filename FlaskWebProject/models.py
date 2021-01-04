@@ -27,6 +27,12 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def register_user(self, username):
+        self.username = username
+        self.password_hash = generate_password_hash("12345678")
+        db.session.add(self)
+        db.session.commit()
 
 @login.user_loader
 def load_user(id):
